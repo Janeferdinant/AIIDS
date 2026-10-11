@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GNEST305 · AI & Data Science – 7-Mark Solved Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b14;--card:rgba(15,23,42,.72);--card2:rgba(30,41,59,.6);--text:#e6edf7;--muted:#8da2c0;--cyan:#22d3ee;--amber:#fbbf24;--violet:#a78bfa;--green:#34d399;--red:#f87171;--line:rgba(148,163,184,.2);--shadow:0 10px 40px rgba(0,0,0,.45);--sans:'Space Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;--mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace}
+:root[data-theme="light"]{--bg:#f1f5fb;--card:rgba(255,255,255,.86);--card2:rgba(226,232,240,.7);--text:#0f172a;--muted:#475569;--cyan:#0e7490;--amber:#b45309;--violet:#6d28d9;--green:#047857;--red:#b91c1c;--line:rgba(15,23,42,.14);--shadow:0 10px 30px rgba(15,23,42,.12)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);overflow-x:hidden}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:18px 16px 80px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 0}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:42px;height:42px;border-radius:12px;background:conic-gradient(from 0deg,var(--cyan),var(--violet),var(--amber),var(--cyan));animation:spin 8s linear infinite;display:grid;place-items:center}
+.logo i{width:32px;height:32px;border-radius:9px;background:var(--bg);display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.brand h1{font-size:1.05rem;margin:0;letter-spacing:.04em}.brand small{color:var(--muted);font-family:var(--mono);font-size:.72rem}
+.btn{background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font:600 .85rem var(--sans);cursor:pointer;transition:.2s}
+.btn:hover{border-color:var(--cyan);transform:translateY(-1px)}.btn.on{background:var(--cyan);color:#041018;border-color:var(--cyan)}
+.hero{margin:18px 0 22px;padding:30px 24px;border-radius:22px;background:linear-gradient(135deg,rgba(34,211,238,.14),rgba(167,139,250,.14),rgba(251,191,36,.1));border:1px solid var(--line);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero h2{font-size:clamp(1.6rem,4.5vw,2.8rem);margin:0 0 6px;line-height:1.1;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--amber),var(--cyan));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{to{background-position:300% 0}}
+.hero p{color:var(--muted);margin:0;max-width:720px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;backdrop-filter:blur(8px)}
+.tile b{display:block;font:700 1.9rem var(--mono);color:var(--cyan)}.tile:nth-child(2) b{color:var(--amber)}.tile:nth-child(3) b{color:var(--violet)}.tile:nth-child(4) b{color:var(--green)}
+.tile span{color:var(--muted);font-size:.78rem}
+.bar{height:8px;border-radius:99px;background:var(--card2);overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--violet));transition:width .6s}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:8px;overflow-x:auto;padding:10px 0;background:linear-gradient(var(--bg) 70%,transparent)}
+nav.tabs .btn{white-space:nowrap}
+section.pane{display:none;animation:fade .45s}section.pane.show{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px;align-items:center}
+.chips input{flex:1;min-width:160px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 12px;color:var(--text);font:.9rem var(--sans)}
+.grid{display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(8px);transform-style:preserve-3d;transition:transform .25s,border-color .25s;opacity:0;transform:translateY(24px)}
+.card.in{opacity:1;transform:none;transition:opacity .6s,transform .6s,border-color .25s}
+.card:hover{border-color:var(--cyan)}
+.card .hd{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;cursor:pointer}
+.card h3{margin:2px 0 4px;font-size:1.08rem}
+.badge{font:600 .68rem var(--mono);padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--muted);margin-right:6px;display:inline-block}
+.badge.m2{color:var(--cyan)}.badge.m3{color:var(--amber)}.badge.m4{color:var(--violet)}.badge.mk{color:var(--green)}
+.q{color:var(--muted);font-size:.9rem;margin:6px 0}
+.body{display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}.card.open .body{display:block;animation:fade .35s}
+.step{padding:8px 12px;margin:7px 0;background:var(--card2);border-left:3px solid var(--cyan);border-radius:8px;font-size:.93rem;opacity:0;transform:translateX(-10px);animation:slide .45s forwards}
+@keyframes slide{to{opacity:1;transform:none}}
+.step code,code{font-family:var(--mono);font-size:.8rem;display:block;white-space:pre-wrap;line-height:1.5;color:var(--green)}
+.result{margin-top:10px;padding:12px 14px;border-radius:12px;background:linear-gradient(90deg,rgba(52,211,153,.18),rgba(34,211,238,.1));border:1px solid var(--green);font-weight:600}
+.result:before{content:"ANSWER  ";font:700 .65rem var(--mono);color:var(--green);letter-spacing:.12em}
+.chev{transition:.3s;color:var(--muted)}.card.open .chev{transform:rotate(180deg)}
+.lab{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.lab .card{opacity:1;transform:none}
+label{display:block;font:.75rem var(--mono);color:var(--muted);margin:8px 0 3px}
+input[type=text],input[type=number],textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 10px;color:var(--text);font:.9rem var(--mono)}
+input[type=range]{width:100%;accent-color:var(--cyan)}
+canvas.cv{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:12px;display:block;margin-top:10px;touch-action:none}
+.out{font:.82rem var(--mono);background:var(--card2);border-radius:10px;padding:10px;margin-top:10px;white-space:pre-wrap;line-height:1.6}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.quiz .opt{display:block;width:100%;text-align:left;margin:7px 0}.opt.ok{background:var(--green);color:#03150e;border-color:var(--green)}.opt.bad{background:var(--red);color:#fff;border-color:var(--red)}
+.exp{margin-top:8px;color:var(--muted);font-size:.88rem}
+h2.sec{margin:6px 0 4px}.sub{color:var(--muted);margin:0 0 12px;font-size:.9rem}
+footer{margin-top:40px;color:var(--muted);font:.75rem var(--mono);text-align:center}
+@media print{#bg,nav.tabs,.btn,.chips{display:none!important}section.pane{display:block!important}.card{opacity:1!important;transform:none!important;break-inside:avoid}.body{display:block!important}:root{--bg:#fff;--text:#000;--card:#fff;--card2:#f1f5f9;--muted:#334155}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="wrap">
+<header class="top">
+  <div class="brand"><div class="logo"><i></i></div><div><h1>GNEST305 · AI &amp; DATA SCIENCE</h1><small>KTU · 7-mark solved question bank · Modules 2-4</small></div></div>
+  <div class="row" style="margin:0"><button class="btn" id="themeBtn">☀ Light</button><button class="btn" onclick="window.print()">⇩ Print / PDF</button></div>
+</header>
+
+<div class="hero">
+  <h2>Solve it. See it. Master it.</h2>
+  <p>Every numerical is worked step-by-step in the 7-mark KTU format, then wired to live labs: regression, Bayes, MLE, eigen-transform, k-NN and a rotating 3-D PCA cloud.</p>
+  <div class="tiles">
+    <div class="tile"><b data-n="19">0</b><span>solved 7-mark answers</span></div>
+    <div class="tile"><b data-n="35">0</b><span>numerical results worked</span></div>
+    <div class="tile"><b data-n="6">0</b><span>interactive labs</span></div>
+    <div class="tile"><b id="pct">0%</b><span>read progress<div class="bar"><i id="pbar"></i></div></span></div>
+  </div>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button class="btn on" data-p="ans">📘 Answers</button>
+  <button class="btn" data-p="labs">🧪 Labs</button>
+  <button class="btn" data-p="d3">🧊 3-D PCA</button>
+  <button class="btn" data-p="kg">🕸 Knowledge graph</button>
+  <button class="btn" data-p="quiz">🎯 Quiz</button>
+</nav>
+
+<section class="pane show" id="ans">
+  <div class="chips" id="chips"></div>
+  <div class="grid" id="cards"></div>
+</section>
+
+<section class="pane" id="labs">
+  <h2 class="sec">Interactive labs</h2><p class="sub">Edit the numbers – every calculation recomputes live.</p>
+  <div class="lab">
+    <div class="card"><h3>1 · Correlation &amp; regression (Q2, 5, 7, 15, 19, 20)</h3>
+      <div class="row"><button class="btn" data-pre="1,2,3|2,3,5">Q15</button><button class="btn" data-pre="1,2,3,4,5|50,55,65,70,75">Q19</button><button class="btn" data-pre="10,12,14,16,18|100,90,80,70,60">Q20</button><button class="btn" data-pre="1,2,3|2,4,5">Q2a</button><button class="btn" data-pre="2,4,6,8|10,9,7,5">Q5</button></div>
+      <label>X values</label><input type="text" id="rx" value="1,2,3,4,5"><label>Y values</label><input type="text" id="ry" value="50,55,65,70,75">
+      <label>Predict Y at X =</label><input type="number" id="rp" value="6" step="any">
+      <canvas class="cv" id="rc" height="260"></canvas><div class="out" id="ro"></div></div>
+    <div class="card"><h3>2 · Bayes' theorem (Q6, 8, 11–18)</h3>
+      <div class="row"><button class="btn" data-bp="30,90,5">Q14</button><button class="btn" data-bp="0.1,99,2">Q17</button><button class="btn" data-bp="20,90,5">Q18</button><button class="btn" data-bp="1,98,2">Q8</button></div>
+      <label>Prior P(H) %: <span id="bv1"></span></label><input type="range" id="b1" min="0.05" max="90" step="0.05" value="0.1">
+      <label>Sensitivity P(+|H) %: <span id="bv2"></span></label><input type="range" id="b2" min="50" max="100" step="0.5" value="99">
+      <label>False-positive P(+|¬H) %: <span id="bv3"></span></label><input type="range" id="b3" min="0" max="30" step="0.1" value="2">
+      <canvas class="cv" id="bc" height="150"></canvas><div class="out" id="bo"></div></div>
+    <div class="card"><h3>3 · Maximum likelihood – coin (Q3, Q25, Q26)</h3>
+      <label>Flips n: <span id="mv1"></span></label><input type="range" id="m1" min="1" max="40" value="8">
+      <label>Heads h: <span id="mv2"></span></label><input type="range" id="m2" min="0" max="8" value="6">
+      <canvas class="cv" id="mc" height="230"></canvas><div class="out" id="mo"></div></div>
+    <div class="card"><h3>4 · Eigen-transform (Q21 spectral)</h3>
+      <div class="row"><div style="flex:1"><label>a</label><input type="number" id="ea" value="4"></div><div style="flex:1"><label>b</label><input type="number" id="eb" value="1"></div><div style="flex:1"><label>c</label><input type="number" id="ec" value="1"></div><div style="flex:1"><label>d</label><input type="number" id="ed" value="3"></div></div>
+      <label>Morph I → A: <span id="evt"></span></label><input type="range" id="et" min="0" max="1" step="0.01" value="1"><div class="row"><button class="btn" id="eplay">▶ Animate</button></div>
+      <canvas class="cv" id="ec2" height="280"></canvas><div class="out" id="eo"></div></div>
+    <div class="card"><h3>5 · Descriptive statistics (Q7, Q10, Q12)</h3>
+      <label>Data</label><input type="text" id="sd" value="5,8,6,10,11"><div class="out" id="so"></div></div>
+    <div class="card"><h3>6 · k-NN classifier (Q28–Q33) – tap canvas to place query</h3>
+      <label>k: <span id="kv"></span></label><input type="range" id="kk" min="1" max="9" value="3"><canvas class="cv" id="kc" height="260"></canvas><div class="out" id="ko"></div></div>
+  </div>
+</section>
+
+<section class="pane" id="d3">
+  <h2 class="sec">3-D PCA cloud</h2><p class="sub">Drag to rotate. The coloured axes are the eigenvectors of the covariance matrix; slide to squash the cloud onto PC1–PC2.</p>
+  <div class="card" style="opacity:1;transform:none"><canvas class="cv" id="pc" height="460"></canvas>
+  <label>Project onto PC1–PC2 plane: <span id="pv"></span></label><input type="range" id="pf" min="0" max="1" step="0.01" value="0"><div class="out" id="po"></div></div>
+</section>
+
+<section class="pane" id="kg">
+  <h2 class="sec">Knowledge graph</h2><p class="sub">Hover to light up neighbours · tap a node to filter the answers.</p>
+  <div class="card" style="opacity:1;transform:none"><canvas class="cv" id="gc" height="520"></canvas></div>
+</section>
+
+<section class="pane quiz" id="quiz"><h2 class="sec">Rapid-fire quiz</h2><p class="sub" id="qscore"></p><div class="card" style="opacity:1;transform:none" id="qbox"></div></section>
+
+<footer>Built for SNMIMT · numbers verified with NumPy · works offline (fonts fall back to system fonts)</footer>
+</div>
+
+<script id="data" type="application/json">[{"id": 1, "mod": 2, "title": "Spectral decomposition of a 2×2 symmetric matrix", "qs": "M2 · Q21", "q": "Given A = [[4,1],[1,3]], perform its spectral decomposition and interpret the results.", "steps": ["<b>Step 1 – Characteristic equation.<\/b> det(A − λI) = (4−λ)(3−λ) − 1 = λ² − 7λ + 11 = 0.", "<b>Step 2 – Eigenvalues.<\/b> λ = (7 ± √(49−44))/2 = (7 ± √5)/2 → <b>λ₁ = 4.618, λ₂ = 2.382<\/b>. (Check: sum = 7 = trace, product = 11 = det.)", "<b>Step 3 – Eigenvectors.<\/b> For λ₁: (4−4.618)x + y = 0 → y = 0.618x → v₁ = (0.8507, 0.5257). For λ₂: (4−2.382)x + y = 0 → y = −1.618x → v₂ = (0.5257, −0.8507). Check v₁·v₂ = 0.447 − 0.447 = 0 (orthogonal, as expected for a symmetric matrix).", "<b>Step 4 – Decomposition.<\/b> A = QΛQᵀ = λ₁v₁v₁ᵀ + λ₂v₂v₂ᵀ, with Q = [v₁ v₂] and Λ = diag(4.618, 2.382).", "<b>Step 5 – Verify.<\/b> λ₁v₁v₁ᵀ = 4.618·[[0.7236,0.4472],[0.4472,0.2764]] = [[3.342,2.065],[2.065,1.276]]; λ₂v₂v₂ᵀ = 2.382·[[0.2764,−0.4472],[−0.4472,0.7236]] = [[0.658,−1.065],[−1.065,1.724]]. Sum = [[4,1],[1,3]] ✓.", "<b>Interpretation.<\/b> A stretches space by 4.618 along v₁ and by 2.382 along v₂ (both positive ⇒ A is positive definite). In PCA, if A were a covariance matrix, v₁ would be the first principal axis carrying 4.618/7 = 66 % of total variance."], "result": "λ₁ = 4.618 (v₁ = [0.851, 0.526]), λ₂ = 2.382 (v₂ = [0.526, −0.851]); A = Σ λᵢ vᵢvᵢᵀ", "tags": ["eigen"]}, {"id": 2, "mod": 2, "title": "Singular Value Decomposition – derivation and 3×3 example", "qs": "M2 · Q12, Q13, Q22", "q": "Derive A = UΣVᵀ and compute the SVD of A = [[3,1,1],[−1,3,1],[1,1,3]]. How does SVD help in compression?", "steps": ["<b>Derivation.<\/b> For any m×n matrix A, AᵀA is symmetric positive semi-definite ⇒ AᵀA = VΛVᵀ with orthonormal V. Let σᵢ = √λᵢ and uᵢ = Avᵢ/σᵢ. Then the uᵢ are orthonormal and AV = UΣ ⇒ <b>A = UΣVᵀ<\/b>.", "<b>Step 1 – AᵀA.<\/b> AᵀA = [[11,1,5],[1,11,7],[5,7,11]].", "<b>Step 2 – Eigenvalues of AᵀA<\/b> (characteristic cubic): λ = 20.094, 10.055, 2.851 (trace = 33 ✓).", "<b>Step 3 – Singular values.<\/b> σ₁ = √20.094 = <b>4.483<\/b>, σ₂ = √10.055 = <b>3.171<\/b>, σ₃ = √2.851 = <b>1.688<\/b>. Check: σ₁σ₂σ₃ = 24 = |det A| ✓.", "<b>Step 4 – V<\/b> = eigenvectors of AᵀA (columns): v₁ = (0.441, 0.577, 0.687), v₂ = (0.816, −0.577, −0.039), v₃ = (−0.374, −0.577, 0.726) (signs are arbitrary).", "<b>Step 5 – U<\/b> from uᵢ = Avᵢ/σᵢ, e.g. u₁ = A v₁ / 4.483 = (2.587, 1.977, 3.079)/4.483 = (0.577, 0.441, 0.687).", "<b>Compression.<\/b> Keep the top k singular values: A ≈ Σᵢ₌₁ᵏ σᵢuᵢvᵢᵀ (rank-k). Storage falls from m·n to k(m+n+1). Here k=1 keeps σ₁²/Σσ² = 20.09/33 = 61 % of the energy; k=2 keeps 91 %. By Eckart–Young this is the best rank-k approximation."], "result": "σ = 4.483, 3.171, 1.688; A = UΣVᵀ; rank-2 truncation keeps 91 % energy", "tags": ["svd"]}, {"id": 3, "mod": 2, "title": "PCA – steps, worked 2-D → 1-D example", "qs": "M2 · Q15, Q16, Q24", "q": "Describe the steps of PCA and illustrate how PCA transforms a 2-D dataset into 1-D.", "steps": ["<b>Algorithm.<\/b> (1) Standardise / mean-centre the data. (2) Compute covariance matrix C. (3) Find eigenvalues & eigenvectors of C. (4) Sort by eigenvalue, keep top k. (5) Project: Z = X_centred · W_k.", "<b>Example data.<\/b> X = [2,3,4,5], Y = [2.5,3.9,5.2,6.4]. Means: x̄ = 3.5, ȳ = 4.5.", "<b>Centred:<\/b> x′ = [−1.5, −0.5, 0.5, 1.5]; y′ = [−2.0, −0.6, 0.7, 1.9].", "<b>Covariance (n−1 = 3).<\/b> Var(x) = 5/3 = 1.667; Var(y) = (4+0.36+0.49+3.61)/3 = 2.820; Cov = (3+0.3+0.35+2.85)/3 = 2.167.", "<b>Eigenvalues.<\/b> λ² − 4.487λ + (1.667·2.820 − 2.167²) = λ² − 4.487λ + 0.0056 = 0 → <b>λ₁ ≈ 4.485, λ₂ ≈ 0.001<\/b>.", "<b>PC1 direction<\/b> ∝ (Cov, λ₁−Var(x)) = (2.167, 2.819) → unit vector (0.610, 0.793).", "<b>Projection to 1-D.<\/b> z = 0.610x′ + 0.793y′ = [−2.50, −0.78, 0.86, 2.42]. Explained variance = 4.485/4.487 ≈ <b>99.98 %<\/b>, so one number per point is enough."], "result": "PC1 = (0.610, 0.793) keeps 99.98 % of variance; 2-D data → 1-D scores", "tags": ["pca"]}, {"id": 4, "mod": 2, "title": "PCA on Breast-Cancer Wisconsin data (Python)", "qs": "M2 · Q45", "q": "Using sklearn's Breast Cancer dataset: apply PCA, compute explained variance ratio, rank and rename the components.", "steps": ["<b>Plan.<\/b> Load → standardise (PCA is scale-sensitive) → PCA → explained_variance_ratio_ → rank → rename.", "<code>from sklearn.datasets import load_breast_cancer<br/>from sklearn.preprocessing import StandardScaler<br/>from sklearn.decomposition import PCA<br/>import pandas as pd<br/>X = load_breast_cancer().data<br/>Xs = StandardScaler().fit_transform(X)<br/>pca = PCA().fit(Xs)                      # (a)<br/>Z = pca.transform(Xs)<br/>evr = pca.explained_variance_ratio_      # (b)<br/>order = evr.argsort()[::-1]              # (c) already sorted<br/>names = [f'PC{i+1}_'+('HighVar' if r>0.10 else 'MidVar' if r>0.05 else 'LowVar') for i,r in enumerate(evr)]  # (d)<br/>df = pd.DataFrame(Z, columns=names)<\/code>", "<b>Typical result (30 features).<\/b> PC1 ≈ 44.3 %, PC2 ≈ 19.0 %, PC3 ≈ 9.4 %; cumulative PC1–PC3 ≈ 72.6 %; ≈ 10 components retain 95 %.", "<b>Renaming rule.<\/b> HighVar if ratio > 10 %, MidVar if 5–10 %, LowVar below 5 %. Choose k with np.cumsum(evr) ≥ 0.95 or the scree-plot elbow."], "result": "Standardise → PCA → evr (44.3 %, 19.0 %, 9.4 %…) → rank → rename PCk_High/Mid/LowVar", "tags": ["pca"]}, {"id": 5, "mod": 3, "title": "Covariance vs correlation – numerical", "qs": "M3 · Q1, Q2, Q9", "q": "Define covariance and differentiate from correlation. Compute covariance for X=[1,2,3], Y=[2,4,5] and Pearson r for X=[10,20,30,40], Y=[15,25,35,45].", "steps": ["<b>Covariance<\/b> measures how two variables vary together: Cov(X,Y) = Σ(xᵢ−x̄)(yᵢ−ȳ)/(n−1). Sign shows direction, but magnitude depends on units. <b>Correlation<\/b> r = Cov/(σₓσᵧ) is its unit-free, standardised form bounded in [−1, +1].", "<b>Part 1.<\/b> x̄ = 2, ȳ = 11/3 = 3.667. Deviations: x′ = −1, 0, 1; y′ = −1.667, 0.333, 1.333. Products: 1.667, 0, 1.333 → Σ = 3.0.", "Sample covariance = 3.0/2 = <b>1.5<\/b> (population covariance = 3.0/3 = 1.0).", "Sample SDs: σₓ = 1; σᵧ = √[(2.778+0.111+1.778)/2] = √2.333 = 1.528 ⇒ r = 1.5/(1×1.528) = <b>0.982<\/b>.", "<b>Part 2.<\/b> x̄ = 25, ȳ = 30. x′ = −15,−5,5,15; y′ = −15,−5,5,15. Σx′y′ = 225+25+25+225 = 500; Σx′² = Σy′² = 500.", "r = 500/√(500×500) = <b>+1.00<\/b> (perfect positive linear: Y = X + 5)."], "result": "Cov = 1.5 (sample), r₁ = 0.982, r₂ = +1", "tags": ["corr"]}, {"id": 6, "mod": 3, "title": "Pearson's coefficient – properties and interpretation", "qs": "M3 · Q3–Q8", "q": "Define Karl Pearson's coefficient, list properties, and solve Q5, Q7, Q8.", "steps": ["<b>Definition.<\/b> r = Σ(x−x̄)(y−ȳ) / √[Σ(x−x̄)² · Σ(y−ȳ)²]. It measures strength and direction of <i>linear<\/i> association.", "<b>Properties.<\/b> (i) −1 ≤ r ≤ +1. (ii) Independent of change of origin and scale (r(aX+b, cY+d) = r for ac>0). (iii) Symmetric: r_xy = r_yx. (iv) Independent variables give r = 0, but r = 0 does not imply independence (non-linear dependence possible). (v) Geometric mean of the two regression coefficients: r² = b_yx·b_xy.", "<b>Meaning of +1, −1, 0.<\/b> +1: perfect increasing line (hours vs. 2×hours). −1: perfect decreasing line (price vs. a fixed budget's units). 0: no linear relation (shoe size vs. IQ).", "<b>Q5: X=[2,4,6,8], Y=[10,9,7,5].<\/b> x̄=5, ȳ=7.75. Σx′y′ = (−3)(2.25)+(−1)(1.25)+(1)(−0.75)+(3)(−2.75) = −6.75−1.25−0.75−8.25 = −17. Σx′² = 20; Σy′² = 5.0625+1.5625+0.5625+7.5625 = 14.75. r = −17/√(20×14.75) = −17/17.176 = <b>−0.990<\/b> → strong <b>negative<\/b> correlation.", "<b>Q7: X=[1..5], Y=[2,4,6,8,10]<\/b> → Y = 2X exactly, so r = <b>+1<\/b>.", "<b>Q8: r = 0.95<\/b> → very strong positive linear relationship; r² = 0.9025, i.e. ≈ 90 % of the variance in one variable is linearly explained by the other. It does <b>not<\/b> prove causation."], "result": "Q5: r = −0.990 (negative); Q7: r = +1; Q8: strong positive, r² ≈ 90 %", "tags": ["corr"]}, {"id": 7, "mod": 3, "title": "Regression analysis and the least-squares principle", "qs": "M3 · Q10–Q18", "q": "What is regression? Explain the principle of least squares, its assumptions, steps and types; compare with correlation.", "steps": ["<b>Regression<\/b> models the dependent variable Y as a function of independent variable(s) X to predict Y: Ŷ = a + bX. <i>Uses:<\/i> forecasting sales, price, risk, demand.", "<b>Least-squares principle.<\/b> Choose a, b that minimise SSE = Σ(yᵢ − a − bxᵢ)². Setting ∂SSE/∂a = ∂SSE/∂b = 0 gives the <b>normal equations<\/b>: Σy = na + bΣx and Σxy = aΣx + bΣx².", "<b>Solution.<\/b> b = [nΣxy − ΣxΣy]/[nΣx² − (Σx)²] = Sxy/Sxx ; a = ȳ − b·x̄.", "<b>Steps.<\/b> (1) Tabulate x, y, xy, x². (2) Sum columns. (3) Solve normal equations for b then a. (4) Write Ŷ = a + bX. (5) Predict and check residuals / R².", "<b>Assumptions.<\/b> Linearity; independence of errors; homoscedasticity (constant error variance); normally distributed errors; no perfect multicollinearity (multiple regression).", "<b>Types.<\/b> Simple (1 predictor), multiple (many predictors), polynomial, logistic (classification), ridge/lasso (regularised).", "<b>Correlation vs regression.<\/b> Correlation: symmetric, measures strength/direction, no dependent variable. Regression: asymmetric, gives an equation to predict Y from X, shows how much Y changes per unit X."], "result": "Minimise Σ(y−a−bx)² ⇒ b = Sxy/Sxx, a = ȳ − b x̄", "tags": ["reg"]}, {"id": 8, "mod": 3, "title": "Regression numericals – Q15, Q19, Q20", "qs": "M3 · Q15, Q19, Q20", "q": "Fit Y = a + bX: (i) X=[1,2,3], Y=[2,3,5]; (ii) hours studied vs marks; (iii) price vs units sold, predict at ₹15.", "steps": ["<b>(i) X=[1,2,3], Y=[2,3,5].<\/b> n=3, Σx=6, Σy=10, Σxy=2+6+15=23, Σx²=14. b = (3·23 − 6·10)/(3·14 − 36) = 9/6 = <b>1.5<\/b>; a = 10/3 − 1.5·2 = <b>0.333<\/b>. Ŷ = 0.333 + 1.5X.", "<b>(ii) Hours x=[1..5], marks y=[50,55,65,70,75].<\/b> n=5, Σx=15, Σy=315, Σxy = 50+110+195+280+375 = 1010, Σx² = 55. b = (5·1010 − 15·315)/(5·55 − 225) = (5050−4725)/50 = <b>6.5<\/b>; a = 63 − 6.5·3 = <b>43.5<\/b>. Ŷ = 43.5 + 6.5X (each extra hour ≈ +6.5 marks).", "<b>(iii) Price x=[10,12,14,16,18], units y=[100,90,80,70,60].<\/b> n=5, Σx=70, Σy=400, Σxy = 1000+1080+1120+1120+1080 = 5400, Σx² = 100+144+196+256+324 = 1020. b = (5·5400 − 70·400)/(5·1020 − 4900) = (27000−28000)/200 = <b>−5<\/b>; a = 80 − (−5)(14) = <b>150<\/b>.", "Model: Units = 150 − 5·Price. <b>At ₹15:<\/b> 150 − 75 = <b>75 units<\/b>. Because the points lie exactly on a line, r = −1 and R² = 1."], "result": "(i) Ŷ=0.333+1.5X  (ii) Ŷ=43.5+6.5X  (iii) Ŷ=150−5X → 75 units at ₹15", "tags": ["reg"]}, {"id": 9, "mod": 3, "title": "Descriptive statistics numericals", "qs": "M3 · Q1–Q13", "q": "Mean/median/mode, skewness from mean–median–mode, variance & SD, and effect of outliers.", "steps": ["<b>Q7. Data 10,15,20,25,30.<\/b> Mean = 100/5 = <b>20<\/b>; median (middle) = <b>20<\/b>; mode = <b>none<\/b> (all values occur once).", "<b>Q10. Mean 60 > Median 55 > Mode 50<\/b> → <b>positive (right) skew<\/b>. The tail stretches right, so a few large values pull the mean up (empirically mode ≈ 3·median − 2·mean = 45, close to 50).", "<b>Q12. Data 5, 8, 6, 10, 11.<\/b> Range = 11−5 = <b>6<\/b>. Mean = 40/5 = 8. Deviations: −3, 0, −2, 2, 3 → squares 9, 0, 4, 4, 9 = 26.", "Population variance = 26/5 = <b>5.2<\/b>, σ = <b>2.28<\/b>; sample variance = 26/4 = <b>6.5<\/b>, s = <b>2.55<\/b>.", "<b>Outliers (Q5, Q8).<\/b> The mean is most affected (every value enters the sum); the median shifts only slightly; the mode is unaffected. e.g. adding 1000 to {10…30} lifts the mean from 20 to 183.3 but the median only to 22.5.", "<b>Kurtosis (Q11, Q13).<\/b> High kurtosis ⇒ heavy tails and a sharper peak (more outliers than a normal curve). <b>Q15.<\/b> Sample 3,5,7,9,11 → point estimate of μ is x̄ = 35/5 = <b>7<\/b>."], "result": "Q7: 20, 20, no mode · Q10: positive skew · Q12: range 6, var 5.2 (6.5), SD 2.28 (2.55) · Q15: 7", "tags": ["stats"]}, {"id": 10, "mod": 3, "title": "Maximum Likelihood Estimation – concept and steps", "qs": "M3 · Q14–Q22", "q": "Define MLE, state the steps, why log-likelihood, and compare with method of moments.", "steps": ["<b>Definition.<\/b> The MLE θ̂ is the parameter value that makes the observed data most probable: θ̂ = argmax L(θ) where L(θ) = Π f(xᵢ; θ) for i.i.d. data.", "<b>Steps.<\/b> (1) Choose the model f(x;θ). (2) Write L(θ) = Π f(xᵢ;θ). (3) Take ln L (log-likelihood). (4) Differentiate: ∂lnL/∂θ = 0. (5) Solve for θ̂. (6) Check second derivative < 0 (maximum).", "<b>Why log?<\/b> Products become sums (easier derivative), avoids numerical underflow, and ln is monotonic so the maximiser is unchanged.", "<b>MLE vs Method of Moments.<\/b> MoM equates sample moments to population moments (simple, closed-form, can be inefficient/biased). MLE maximises likelihood: consistent, asymptotically efficient and normal, invariant under re-parameterisation, but may need numerical optimisation.", "<b>Prefer MLE<\/b> when the distribution is known and you need efficient estimates, e.g. logistic regression / neural-network cross-entropy training in AI (minimising cross-entropy = maximising likelihood)."], "result": "θ̂ = argmax Π f(xᵢ;θ) → solve d ln L/dθ = 0", "tags": ["mle"]}, {"id": 11, "mod": 3, "title": "MLE of Bernoulli / coin data", "qs": "M3 · Q3, Q25", "q": "Coin results (i) H,H,H,T and (ii) H,T,H,H,H,T,H,H. Write L(p), ln L(p), find p̂ and interpret.", "steps": ["<b>(i) H,H,H,T:<\/b> 3 heads, 1 tail. L(p) = p³(1−p). ln L = 3 ln p + ln(1−p). d/dp: 3/p − 1/(1−p) = 0 ⇒ 3(1−p) = p ⇒ <b>p̂ = 3/4 = 0.75<\/b>.", "<b>(ii) 8 flips:<\/b> H,T,H,H,H,T,H,H → 6 heads, 2 tails.", "<b>(a)<\/b> L(p) = p⁶(1−p)².  <b>(b)<\/b> ln L(p) = 6 ln p + 2 ln(1−p).", "<b>(c)<\/b> d lnL/dp = 6/p − 2/(1−p) = 0 ⇒ 6(1−p) = 2p ⇒ 6 = 8p ⇒ <b>p̂ = 0.75<\/b>. Second derivative −6/p² − 2/(1−p)² < 0 ⇒ maximum ✓.", "<b>(d) Interpretation.<\/b> The MLE of P(heads) is simply the sample proportion of heads, h/n. At p = 0.75 the observed sequence is most likely: L(0.75) = 0.75⁶·0.25² = 0.0111, compared with L(0.5) = 0.0039."], "result": "p̂ = heads / flips = 0.75 in both cases", "tags": ["mle"]}, {"id": 12, "mod": 3, "title": "MLE – Normal, Poisson, Binomial, Geometric", "qs": "M3 · Q20, Q23, Q24, Q26, Q27", "q": "Find MLEs for μ (normal), λ (Poisson, prove), p (binomial 6/20), p (geometric [3,1,2,2,4]).", "steps": ["<b>Normal mean (Q20), data 5,7,8,10,12.<\/b> ln L = const − Σ(xᵢ−μ)²/2σ². d/dμ = Σ(xᵢ−μ)/σ² = 0 ⇒ μ̂ = x̄ = 42/5 = <b>8.4<\/b>.", "<b>Poisson proof (Q24).<\/b> L(λ) = Π e^{−λ}λ^{xᵢ}/xᵢ!. ln L = −nλ + (Σxᵢ) ln λ − Σ ln xᵢ!. d/dλ = −n + Σxᵢ/λ = 0 ⇒ <b>λ̂ = Σxᵢ/n = x̄<\/b>. Second derivative −Σxᵢ/λ² < 0 ✓.", "<b>Binomial (Q26): n=20, x=6 defective.<\/b> L(p) = C(20,6) p⁶(1−p)¹⁴. ln L = const + 6 ln p + 14 ln(1−p). 6/p = 14/(1−p) ⇒ p̂ = 6/20 = <b>0.30<\/b>.", "<b>Geometric (Q23, Q27): P(X=x) = (1−p)^{x−1}p.<\/b> For [3,1,2,2,4]: n = 5, Σx = 12. L(p) = pⁿ(1−p)^{Σx−n} = p⁵(1−p)⁷. ln L = 5 ln p + 7 ln(1−p). 5/p = 7/(1−p) ⇒ p̂ = n/Σx = 5/12 = <b>0.4167<\/b>."], "result": "μ̂ = 8.4 · λ̂ = x̄ · p̂ = 0.30 (binomial) · p̂ = 5/12 = 0.417 (geometric)", "tags": ["mle"]}, {"id": 13, "mod": 3, "title": "Bayes' theorem – total probability (3 sources)", "qs": "M3 · Q11, Q12, Q13", "q": "Printers P1,P2,P3 (30/45/25 %; errors 1/2/4 %) – find P(P3 | misprint). Machines X,Y,Z (25/50/25 %; defects 1/2/6 %) – P(Z | defective). Suppliers A,B,C (40/35/25 %; defects 3/2/4 %) – P(A | defective).", "steps": ["<b>Bayes:<\/b> P(Aᵢ|E) = P(E|Aᵢ)P(Aᵢ) / Σ P(E|Aⱼ)P(Aⱼ).", "<b>Q11.<\/b> Joint: P1: 0.30×0.01 = 0.003; P2: 0.45×0.02 = 0.009; P3: 0.25×0.04 = 0.010. P(misprint) = 0.022. P(P3 | misprint) = 0.010/0.022 = <b>0.4545 (45.5 %)<\/b>.", "<b>Q12.<\/b> X: 0.25×0.01 = 0.0025; Y: 0.50×0.02 = 0.0100; Z: 0.25×0.06 = 0.0150. Total = 0.0275. P(Z | defective) = 0.0150/0.0275 = <b>0.5455 (54.5 %)<\/b>.", "<b>Q13.<\/b> A: 0.40×0.03 = 0.012; B: 0.35×0.02 = 0.007; C: 0.25×0.04 = 0.010. Total = 0.029. P(A | defective) = 0.012/0.029 = <b>0.4138 (41.4 %)<\/b>.", "<b>Insight.<\/b> The machine with the highest defect rate (or the largest volume × rate) dominates the posterior, even if it makes only a quarter of the output."], "result": "Q11: 0.4545 · Q12: 0.5455 · Q13: 0.4138", "tags": ["bayes"]}, {"id": 14, "mod": 3, "title": "Bayes' theorem – tests and classifiers (base-rate effect)", "qs": "M3 · Q6, Q8, Q14, Q17, Q18", "q": "Factory test, rare-disease test, COVID test and spam filter: compute the posterior probability.", "steps": ["<b>Q14 – Factory.<\/b> P(D)=0.30, P(+|D)=0.90, P(+|¬D)=0.05. P(+) = 0.30·0.90 + 0.70·0.05 = 0.27 + 0.035 = 0.305. P(D|+) = 0.27/0.305 = <b>0.885<\/b>.", "<b>Q17 – Rare disease (1 in 1000).<\/b> P(+) = 0.001·0.99 + 0.999·0.02 = 0.00099 + 0.01998 = 0.02097. P(D|+) = 0.00099/0.02097 = <b>0.0472 (4.7 %)<\/b> – despite a “99 % accurate” test, a positive result still means only a ~5 % chance of disease, because the disease is so rare (base-rate fallacy).", "<b>Q18 – Spam filter.<\/b> P(S)=0.20, P(flag|S)=0.90, P(flag|¬S)=0.05. P(flag) = 0.18 + 0.04 = 0.22. P(S|flag) = 0.18/0.22 = <b>0.818 (81.8 %)<\/b>.", "<b>Q8 – COVID.<\/b> Prevalence 1 %, sensitivity 98 %, false-positive 2 %. P(+) = 0.01·0.98 + 0.99·0.02 = 0.0098 + 0.0198 = 0.0296. P(COVID|+) = 0.0098/0.0296 = <b>0.331 (33.1 %)<\/b>.", "<b>Q6 – Medical test 95 % accurate, 0.5 % prevalence<\/b> (taking sensitivity = specificity = 0.95). P(+) = 0.005·0.95 + 0.995·0.05 = 0.00475 + 0.04975 = 0.0545. P(D|+) = 0.00475/0.0545 = <b>0.0872 (8.7 %)<\/b>.", "<b>AI use.<\/b> Bayes underpins Naïve Bayes spam/text classifiers, medical decision support and Bayesian updating of model beliefs."], "result": "Q14: 0.885 · Q17: 0.047 · Q18: 0.818 · Q8: 0.331 · Q6: 0.087", "tags": ["bayes"]}, {"id": 15, "mod": 3, "title": "Conditional, multiplication and addition rules", "qs": "M3 · Q3, Q4, Q9, Q15, Q16", "q": "Solve: two red cards without replacement; P(English | Math); addition rule; both balls red.", "steps": ["<b>Addition rule.<\/b> P(A∪B) = P(A) + P(B) − P(A∩B). <b>Multiplication rule.<\/b> P(A∩B) = P(A)·P(B|A). Conditional: P(B|A) = P(A∩B)/P(A).", "<b>Q15 – two red cards, no replacement.<\/b> P(A) = 26/52 = 1/2; P(B|A) = 25/51. P(A∩B) = (1/2)(25/51) = 25/102 = <b>0.2451<\/b>.", "<b>Q16 – P(English | Math).<\/b> P(M)=0.60, P(E)=0.50, P(M∩E)=0.30. P(E|M) = 0.30/0.60 = <b>0.50<\/b>. Since P(E|M) = P(E), passing English and Math are independent events.", "<b>Addition-rule example.<\/b> P(A)=0.3, P(B)=0.6, P(A∩B)=0.2 ⇒ P(A∪B) = 0.3 + 0.6 − 0.2 = <b>0.7<\/b>.", "<b>Balls (3 red, 2 green, as read from the page).<\/b> P(both red) = (3/5)(2/4) = 6/20 = <b>0.30<\/b>."], "result": "Q15: 0.2451 · Q16: 0.50 (independent) · P(A∪B) = 0.7 · both red = 0.30", "tags": ["bayes"]}, {"id": 16, "mod": 4, "title": "Supervised, unsupervised & reinforcement learning", "qs": "M4 · Q5, Q8, Q25–Q27", "q": "Compare the three types of machine learning with examples and applications.", "steps": ["<b>Machine learning:<\/b> algorithms that learn patterns from data to predict or decide without being explicitly programmed.", "<b>Supervised.<\/b> Labelled data (X, y); learns the mapping X→y. <i>Regression<\/i> (house price) and <i>classification<\/i> (spam / not spam, CAPTCHA digits). Algorithms: linear/logistic regression, k-NN, decision trees, SVM, Naïve Bayes.", "<b>Unsupervised.<\/b> No labels; discovers structure. <i>Clustering<\/i> (k-means customer segmentation), <i>dimensionality reduction<\/i> (PCA), anomaly detection (fraud).", "<b>Reinforcement.<\/b> An agent interacts with an environment, receives rewards and learns a policy that maximises cumulative reward. Examples: game-playing agents, robot navigation, recommendation tuning.", "<b>Semi-supervised.<\/b> Few labels + many unlabelled points: cluster first, propagate labels, or use active learning (Fig 9.5: two labelled points → two clusters ‘satisfied/not satisfied’).", "<b>Application map.<\/b> Prediction → regression; pattern detection → clustering/association; decision-making → reinforcement learning; automation & scalability → pipelines that retrain on new data."], "result": "Supervised = labelled · Unsupervised = unlabelled structure · RL = reward-driven policy", "tags": ["ml"]}, {"id": 17, "mod": 4, "title": "k-Nearest Neighbours – worked example, MSE, code", "qs": "M4 · Q28–Q35", "q": "Explain k-NN, why it is lazy, role of Euclidean distance, effect of large k; classify (4 h study, 7 h sleep); compute MSE; Python snippet.", "steps": ["<b>Principle.<\/b> To classify a new point, compute its distance to every training point, take the k nearest, and vote (classification) or average (regression). <b>Lazy learner:<\/b> no training phase – it just stores data and does the work at prediction time.", "<b>Euclidean distance:<\/b> d = √[(x₁−x₂)² + (y₁−y₂)²]. (Scale features first!)", "<b>Q33 worked example (illustrative training set).<\/b> Query = (4 h study, 7 h sleep). A(2,6,Fail): d=√5=2.24; B(3,7,Fail): d=1.00; C(5,6,Pass): d=√2=1.41; D(8,8,Pass): d=4.12; E(1,4,Fail): d=4.24. With k=3 the nearest are B, C, A → Fail, Pass, Fail ⇒ majority <b>Fail<\/b>. (Replace with your textbook table.)", "<b>Large k (Q32).<\/b> k=100 on a small dataset → the vote covers almost the whole set, so predictions collapse to the majority class (under-fitting, high bias). Small k → noisy (over-fitting).", "<b>Q35 – MSE.<\/b> Y = [10,12,14], Ŷ = [11,11,13]. Errors = −1, +1, +1; squared = 1, 1, 1. MSE = 3/3 = <b>1.0<\/b> (RMSE = 1.0).", "<b>Q31.<\/b> Coefficient 2.3 for ‘Advertising Spend’: holding other variables constant, every 1-unit increase in ad spend raises the predicted outcome (e.g. sales) by 2.3 units.", "<code>from sklearn.neighbors import KNeighborsClassifier<br/>X = [[2,6],[3,7],[5,6],[8,8],[1,4]]; y = ['Fail','Fail','Pass','Pass','Fail']<br/>model = KNeighborsClassifier(n_neighbors=3).fit(X, y)<br/>print(model.predict([[4,7]]))   # ['Fail']<\/code>", "<b>Q36.<\/b> Test on unseen (hold-out) data to measure generalisation and detect over-fitting; <b>Q37.<\/b> prefer a simple model for interpretability, less data, speed and lower over-fitting risk."], "result": "Query (4,7) → Fail (k=3) · MSE = 1.0 · large k → majority class", "tags": ["knn"]}, {"id": 18, "mod": 4, "title": "Six steps of the data science process", "qs": "M4 · Q1–Q11", "q": "Describe the six major steps of the data science process and why iteration matters.", "steps": ["<b>1. Setting the research goal<\/b> – understand the business context; formalise goals, deliverables and timeline in a <b>project charter<\/b>.", "<b>2. Retrieving data<\/b> – find internal (databases, data warehouse) or external data; check data quality early.", "<b>3. Data preparation<\/b> – <i>cleansing<\/i> (fix errors, missing values, duplicates), <i>integration<\/i> (joining, appending), <i>transformation<\/i> (log transform, dummy variables).", "<b>4. Data exploration (EDA)<\/b> – histograms, boxplots, Pareto charts, correlation to find patterns and outliers before modelling.", "<b>5. Data modelling<\/b> – select technique, execute (e.g. regression, k-NN), diagnose with R², adjusted R², p-values; main output = a trained, validated model.", "<b>6. Presentation & automation<\/b> – communicate results with soft skills; automate scoring and reports.", "<b>Why iterate?<\/b> Exploration reveals data problems and modelling reveals new questions, so earlier steps are revisited to improve data and model quality."], "result": "Goal → Retrieve → Prepare → Explore → Model → Present/Automate (iterative)", "tags": ["ds"]}, {"id": 19, "mod": 4, "title": "Big Data and the 5 Vs", "qs": "M4 · Big Data Q1–Q30", "q": "Why do traditional tools struggle with Big Data? Explain the 5 Vs and the role of Value and Veracity.", "steps": ["<b>5 Vs.<\/b> <b>Volume<\/b> (terabytes–petabytes), <b>Velocity<\/b> (speed of arrival, real-time streams), <b>Variety<\/b> (structured, semi-structured, unstructured), <b>Veracity<\/b> (trustworthiness/quality) and <b>Value<\/b> (business insight extracted).", "<b>Why traditional tools fail.<\/b> Single-server RDBMS cannot hold the volume (vertical scaling limit), cannot ingest fast streams, and require fixed schemas that do not fit text, images, audio or sensor data.", "<b>Solution.<\/b> Horizontal scaling and distributed architecture (Hadoop/HDFS, Spark/PySpark), NoSQL stores, streaming tools (Kafka, Spark Streaming), batch + real-time processing together.", "<b>Why Value matters most.<\/b> Data without insight is only cost; Value is the reason for collecting the other four Vs. <b>Veracity<\/b> – low-quality data (fake reviews, sensor noise) gives misleading analytics, critical in healthcare and finance.", "<b>Example – bank fraud detection:<\/b> Velocity + Veracity most relevant; use Kafka + Spark Streaming + ML anomaly detection. <b>Hospital:<\/b> Variety – combine EHR tables (structured), lab reports (semi-structured), scans (unstructured) in a data lake."], "result": "Volume · Velocity · Variety · Veracity · Value", "tags": ["bigdata"]}]</script>
+<script>
+const DATA=JSON.parse(document.getElementById('data').textContent);
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const DPR=Math.min(window.devicePixelRatio||1,3);
+function fit(c,h){const w=c.clientWidth||600;c.width=Math.round(w*DPR);c.height=Math.round((h||c.getAttribute('height'))*DPR);const x=c.getContext('2d');x.setTransform(DPR,0,0,DPR,0,0);return{x,w,h:c.height/DPR}}
+const f4=v=>Number.isFinite(v)?(Math.abs(v)<1e-9?'0':(+v.toFixed(4)).toString()):'—';
+const nums=s=>s.split(/[,\s]+/).map(Number).filter(v=>!isNaN(v)&&v!==null);
+
+/* theme */
+const tb=$('#themeBtn');
+tb.onclick=()=>{const d=document.documentElement;const l=d.dataset.theme==='dark';d.dataset.theme=l?'light':'dark';tb.textContent=l?'☾ Dark':'☀ Light';redrawAll()};
+if(matchMedia&&matchMedia('(prefers-color-scheme: light)').matches){document.documentElement.dataset.theme='light';tb.textContent='☾ Dark'}
+
+/* animated background */
+const bg=$('#bg'),bx=bg.getContext('2d');let stars=[];
+function bgInit(){bg.width=innerWidth*DPR;bg.height=innerHeight*DPR;bx.setTransform(DPR,0,0,DPR,0,0);stars=Array.from({length:Math.round(innerWidth*innerHeight/9000)},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,z:Math.random()*.8+.2,p:Math.random()*6}))}
+function bgLoop(t){bx.clearRect(0,0,innerWidth,innerHeight);const col=cv('--cyan'),vi=cv('--violet');
+ stars.forEach((s,i)=>{s.y+=s.z*.25;if(s.y>innerHeight)s.y=0;bx.globalAlpha=.25+.55*Math.abs(Math.sin(t/900+s.p));bx.fillStyle=i%3?col:vi;bx.beginPath();bx.arc(s.x,s.y,s.z*1.5,0,6.3);bx.fill()});
+ bx.globalAlpha=.12;bx.strokeStyle=col;for(let i=0;i<stars.length;i+=4){const a=stars[i],b=stars[(i+7)%stars.length];if(Math.hypot(a.x-b.x,a.y-b.y)<130){bx.beginPath();bx.moveTo(a.x,a.y);bx.lineTo(b.x,b.y);bx.stroke()}}
+ bx.globalAlpha=1;requestAnimationFrame(bgLoop)}
+addEventListener('resize',()=>{bgInit();redrawAll()});bgInit();requestAnimationFrame(bgLoop);
+
+/* count-up */
+$$('[data-n]').forEach(e=>{const n=+e.dataset.n;let i=0;const id=setInterval(()=>{i+=Math.max(1,n/30);if(i>=n){i=n;clearInterval(id)}e.textContent=Math.round(i)},35)});
+
+/* tabs */
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;$$('#tabs .btn').forEach(x=>x.classList.toggle('on',x===b));$$('.pane').forEach(p=>p.classList.toggle('show',p.id===b.dataset.p));redrawAll();if(b.dataset.p==='ans')observe()}
+function go(p){$(`#tabs [data-p="${p}"]`).click()}
+
+/* answers */
+const read=new Set();let filt='all',tagF=null,qstr='';
+const chips=$('#chips');
+chips.innerHTML=['all','2','3','4'].map(m=>`<button class="btn ${m==='all'?'on':''}" data-m="${m}">${m==='all'?'All modules':'Module '+m}</button>`).join('')+'<input id="srch" placeholder="Search e.g. Bayes, SVD, regression…">';
+chips.onclick=e=>{const b=e.target.closest('button');if(!b)return;filt=b.dataset.m;tagF=null;$$('#chips .btn').forEach(x=>x.classList.toggle('on',x===b));render()};
+$('#srch').oninput=e=>{qstr=e.target.value.toLowerCase();render()};
+function render(){const box=$('#cards');box.innerHTML='';
+ DATA.filter(d=>(filt==='all'||d.mod==filt)&&(!tagF||d.tags.includes(tagF))&&(!qstr||(d.title+d.qs+d.q+d.steps.join(' ')).toLowerCase().includes(qstr))).forEach(d=>{
+  const c=document.createElement('div');c.className='card';c.dataset.id=d.id;
+  c.innerHTML=`<div class="hd"><div><span class="badge m${d.mod}">MODULE ${d.mod}</span><span class="badge">${d.qs}</span><span class="badge mk">7 MARKS</span><h3>${d.id}. ${d.title}</h3><div class="q">${d.q}</div></div><span class="chev">▼</span></div>
+  <div class="body">${d.steps.map((s,i)=>`<div class="step" style="animation-delay:${i*.09}s">${s}</div>`).join('')}<div class="result">${d.result}</div><div class="row"><button class="btn rd">${read.has(d.id)?'✓ Read':'Mark as read'}</button></div></div>`;
+  c.querySelector('.hd').onclick=()=>c.classList.toggle('open');
+  c.querySelector('.rd').onclick=ev=>{read.has(d.id)?read.delete(d.id):read.add(d.id);ev.target.textContent=read.has(d.id)?'✓ Read':'Mark as read';prog()};
+  c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.transform=`perspective(900px) rotateX(${((e.clientY-r.top)/r.height-.5)*-3}deg) rotateY(${((e.clientX-r.left)/r.width-.5)*3}deg)`});
+  c.addEventListener('mouseleave',()=>c.style.transform='');
+  box.appendChild(c)});observe()}
+function prog(){const p=Math.round(read.size/DATA.length*100);$('#pct').textContent=p+'%';$('#pbar').style.width=p+'%'}
+function observe(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.05});$$('.card:not(.in)').forEach(c=>io.observe(c));setTimeout(()=>$$('#cards .card').forEach(c=>c.classList.add('in')),900)}
+render();
+
+/* ---------- LAB 1: regression ---------- */
+let rAnim=1;
+function regCalc(){const X=nums($('#rx').value),Y=nums($('#ry').value);const n=Math.min(X.length,Y.length);if(n<2)return null;const x=X.slice(0,n),y=Y.slice(0,n);
+ const mx=x.reduce((a,b)=>a+b)/n,my=y.reduce((a,b)=>a+b)/n;let sxy=0,sxx=0,syy=0;for(let i=0;i<n;i++){sxy+=(x[i]-mx)*(y[i]-my);sxx+=(x[i]-mx)**2;syy+=(y[i]-my)**2}
+ const b=sxy/sxx,a=my-b*mx,r=sxy/Math.sqrt(sxx*syy);return{x,y,n,mx,my,sxy,sxx,syy,b,a,r,cov:sxy/(n-1)}}
+function regDraw(){const R=regCalc();if(!R){$('#ro').textContent='Enter ≥2 values each';return}const{x:g,w,h}=fit($('#rc'),260);const p=+$('#rp').value;const pred=R.a+R.b*p;
+ const xs=[...R.x,p],ys=[...R.y,pred],x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),pd=34;
+ const X=v=>pd+(v-x0)/(x1-x0||1)*(w-2*pd),Y=v=>h-pd-(v-y0)/(y1-y0||1)*(h-2*pd);
+ g.strokeStyle=cv('--line');g.fillStyle=cv('--muted');g.font='11px monospace';for(let i=0;i<=4;i++){const yy=pd+i*(h-2*pd)/4;g.beginPath();g.moveTo(pd,yy);g.lineTo(w-pd,yy);g.stroke();g.fillText(f4(y1-i*(y1-y0)/4),2,yy+4)}
+ const t=Math.min(1,rAnim);g.strokeStyle=cv('--amber');g.lineWidth=2.5;g.beginPath();g.moveTo(X(x0),Y(R.a+R.b*x0));g.lineTo(X(x0+(x1-x0)*t),Y(R.a+R.b*(x0+(x1-x0)*t)));g.stroke();
+ R.x.forEach((v,i)=>{const yh=R.a+R.b*v;g.strokeStyle=cv('--red');g.lineWidth=1;g.beginPath();g.moveTo(X(v),Y(R.y[i]));g.lineTo(X(v),Y(yh));g.stroke();g.fillStyle=cv('--cyan');g.beginPath();g.arc(X(v),Y(R.y[i]),5,0,6.3);g.fill()});
+ g.fillStyle=cv('--green');g.beginPath();g.arc(X(p),Y(pred),7,0,6.3);g.fill();g.fillStyle=cv('--text');g.fillText('predict',X(p)-16,Y(pred)-12);
+ const sse=R.y.reduce((s,v,i)=>s+(v-(R.a+R.b*R.x[i]))**2,0);
+ $('#ro').textContent=`n=${R.n}  x̄=${f4(R.mx)}  ȳ=${f4(R.my)}\nSxy=${f4(R.sxy)}  Sxx=${f4(R.sxx)}  Syy=${f4(R.syy)}\nb = Sxy/Sxx = ${f4(R.b)}\na = ȳ − b·x̄ = ${f4(R.a)}\nŶ = ${f4(R.a)} ${R.b<0?'−':'+'} ${f4(Math.abs(R.b))}·X\nCov(sample) = ${f4(R.cov)}   r = ${f4(R.r)}   R² = ${f4(R.r**2)}\nSSE = ${f4(sse)}\nPrediction at X=${p}: Ŷ = ${f4(pred)}`}
+function regGo(){rAnim=0;(function s(){rAnim+=.04;regDraw();if(rAnim<1)requestAnimationFrame(s)})()}
+['rx','ry','rp'].forEach(i=>$('#'+i).addEventListener('input',()=>{rAnim=1;regDraw()}));
+$$('[data-pre]').forEach(b=>b.onclick=()=>{const[a,c]=b.dataset.pre.split('|');$('#rx').value=a;$('#ry').value=c;$('#rp').value=b.dataset.pre.startsWith('10,12')?15:6;regGo()});
+
+/* ---------- LAB 2: Bayes ---------- */
+function bayes(){const p=+$('#b1').value/100,s=+$('#b2').value/100,f=+$('#b3').value/100;$('#bv1').textContent=(p*100)+'%';$('#bv2').textContent=(s*100)+'%';$('#bv3').textContent=(f*100)+'%';
+ const tp=p*s,fp=(1-p)*f,post=tp/(tp+fp);const{x:g,w,h}=fit($('#bc'),150);const N=100000;
+ g.fillStyle=cv('--muted');g.font='12px monospace';g.fillText('Out of 100,000 people who test positive-or-not, positives split into:',6,16);
+ const tot=tp+fp,wTP=(w-12)*tp/tot;g.fillStyle=cv('--green');g.fillRect(6,34,wTP,38);g.fillStyle=cv('--red');g.fillRect(6+wTP,34,(w-12)-wTP,38);
+ g.fillStyle='#fff';g.font='bold 12px monospace';g.fillText('true +  '+Math.round(tp*N),12,58);g.fillText('false +  '+Math.round(fp*N),Math.max(14+wTP,w-130),58);
+ g.fillStyle=cv('--cyan');g.font='bold 22px monospace';g.fillText('P(H | +) = '+(post*100).toFixed(2)+'%',6,112);
+ $('#bo').textContent=`P(+) = P(H)P(+|H) + P(¬H)P(+|¬H)\n     = ${f4(p)}×${f4(s)} + ${f4(1-p)}×${f4(f)} = ${f4(tp)} + ${f4(fp)} = ${f4(tp+fp)}\nP(H|+) = ${f4(tp)} / ${f4(tp+fp)} = ${f4(post)}`}
+['b1','b2','b3'].forEach(i=>$('#'+i).addEventListener('input',bayes));
+$$('[data-bp]').forEach(b=>b.onclick=()=>{const[a,c,d]=b.dataset.bp.split(',');$('#b1').value=a;$('#b2').value=c;$('#b3').value=d;bayes()});
+
+/* ---------- LAB 3: MLE ---------- */
+function mle(){const n=+$('#m1').value;$('#m2').max=n;if(+$('#m2').value>n)$('#m2').value=n;const k=+$('#m2').value;$('#mv1').textContent=n;$('#mv2').textContent=k;
+ const{x:g,w,h}=fit($('#mc'),230);const L=p=>Math.pow(p,k)*Math.pow(1-p,n-k);const ph=k/n,pk=L(ph)||1e-300;const pd=30;
+ g.strokeStyle=cv('--line');g.beginPath();g.moveTo(pd,h-pd);g.lineTo(w-8,h-pd);g.stroke();
+ g.strokeStyle=cv('--violet');g.lineWidth=2.5;g.beginPath();for(let i=0;i<=200;i++){const p=i/200,xx=pd+p*(w-pd-8),yy=h-pd-(L(p)/pk)*(h-pd-14);i?g.lineTo(xx,yy):g.moveTo(xx,yy)}g.stroke();
+ const mx=pd+ph*(w-pd-8);g.setLineDash([5,4]);g.strokeStyle=cv('--amber');g.beginPath();g.moveTo(mx,14);g.lineTo(mx,h-pd);g.stroke();g.setLineDash([]);g.fillStyle=cv('--amber');g.beginPath();g.arc(mx,14,6,0,6.3);g.fill();
+ g.fillStyle=cv('--muted');g.font='11px monospace';g.fillText('0',pd-4,h-12);g.fillText('p →  1',w-48,h-12);g.fillText('p̂='+f4(ph),Math.min(mx+8,w-70),30);
+ $('#mo').textContent=`L(p) = p^${k}(1−p)^${n-k}\nln L = ${k}·ln p + ${n-k}·ln(1−p)\nd lnL/dp = ${k}/p − ${n-k}/(1−p) = 0  ⇒  p̂ = ${k}/${n} = ${f4(ph)}\nL(p̂) = ${L(ph).toExponential(3)}   L(0.5) = ${L(.5).toExponential(3)}`}
+['m1','m2'].forEach(i=>$('#'+i).addEventListener('input',mle));
+
+/* ---------- LAB 4: eigen ---------- */
+function eig(){const a=+$('#ea').value,b=+$('#eb').value,c=+$('#ec').value,d=+$('#ed').value,t=+$('#et').value;$('#evt').textContent=t.toFixed(2);
+ const tr=a+d,det=a*d-b*c,disc=tr*tr/4-det;const{x:g,w,h}=fit($('#ec2'),280);const cx=w/2,cy=h/2,sc=Math.min(w,h)/2/Math.max(3,Math.abs(a)+Math.abs(b),Math.abs(c)+Math.abs(d))*1.05;
+ g.strokeStyle=cv('--line');g.beginPath();g.moveTo(0,cy);g.lineTo(w,cy);g.moveTo(cx,0);g.lineTo(cx,h);g.stroke();
+ const M=[[1+(a-1)*t,b*t],[c*t,1+(d-1)*t]];
+ g.strokeStyle=cv('--muted');g.setLineDash([4,4]);g.beginPath();g.arc(cx,cy,sc,0,6.3);g.stroke();g.setLineDash([]);
+ g.strokeStyle=cv('--cyan');g.lineWidth=2.5;g.beginPath();for(let i=0;i<=120;i++){const th=i/120*6.2832,u=Math.cos(th),v=Math.sin(th),X=M[0][0]*u+M[0][1]*v,Y=M[1][0]*u+M[1][1]*v;const px=cx+X*sc,py=cy-Y*sc;i?g.lineTo(px,py):g.moveTo(px,py)}g.stroke();
+ let txt=`trace=${f4(tr)}  det=${f4(det)}\nλ² − ${f4(tr)}λ + ${f4(det)} = 0\n`;
+ if(disc>=0){const l1=tr/2+Math.sqrt(disc),l2=tr/2-Math.sqrt(disc);[[l1,cv('--amber')],[l2,cv('--violet')]].forEach(([l,col],i)=>{let v=Math.abs(b)>1e-9?[b,l-a]:Math.abs(c)>1e-9?[l-d,c]:(i?[0,1]:[1,0]);const m=Math.hypot(...v)||1;v=[v[0]/m,v[1]/m];
+  g.strokeStyle=col;g.lineWidth=2;g.beginPath();g.moveTo(cx-v[0]*sc*2,cy+v[1]*sc*2);g.lineTo(cx+v[0]*sc*2,cy-v[1]*sc*2);g.stroke();txt+=`λ${i+1} = ${f4(l)}   v${i+1} = (${f4(v[0])}, ${f4(v[1])})\n`});}
+ else txt+=`Complex eigenvalues (rotation): ${f4(tr/2)} ± ${f4(Math.sqrt(-disc))}i`;
+ $('#eo').textContent=txt}
+['ea','eb','ec','ed','et'].forEach(i=>$('#'+i).addEventListener('input',eig));
+$('#eplay').onclick=()=>{let t=0;(function s(){t+=.02;$('#et').value=Math.min(t,1);eig();if(t<1)requestAnimationFrame(s)})()};
+
+/* ---------- LAB 5: stats ---------- */
+function stats(){const d=nums($('#sd').value);if(!d.length){$('#so').textContent='Enter numbers';return}const n=d.length,s=[...d].sort((a,b)=>a-b),m=d.reduce((a,b)=>a+b)/n;
+ const med=n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2;const cnt={};d.forEach(v=>cnt[v]=(cnt[v]||0)+1);const mx=Math.max(...Object.values(cnt));const mode=mx==1?'none (all unique)':Object.keys(cnt).filter(k=>cnt[k]==mx).join(', ');
+ const ss=d.reduce((a,v)=>a+(v-m)**2,0),vp=ss/n,vs=n>1?ss/(n-1):NaN,sk=3*(m-med)/Math.sqrt(vs);
+ $('#so').textContent=`n=${n}  Σx=${f4(d.reduce((a,b)=>a+b))}\nmean=${f4(m)}  median=${f4(med)}  mode=${mode}\nrange=${f4(s[n-1]-s[0])}\nΣ(x−x̄)²=${f4(ss)}\nvariance: population=${f4(vp)}  sample=${f4(vs)}\nSD: population=${f4(Math.sqrt(vp))}  sample=${f4(Math.sqrt(vs))}\nPearson skew=3(mean−median)/s=${f4(sk)}  → ${sk>0.05?'positive (right) skew':sk<-0.05?'negative (left) skew':'≈ symmetric'}`}
+$('#sd').addEventListener('input',stats);
+
+/* ---------- LAB 6: kNN ---------- */
+const kp=[[2,6,0],[3,7,0],[5,6,1],[8,8,1],[1,4,0],[6,3,1],[7,5,1],[2,2,0]];let kq=[4,7];
+function knn(){const k=+$('#kk').value;$('#kv').textContent=k;const{x:g,w,h}=fit($('#kc'),260);const X=v=>30+v/10*(w-50),Y=v=>h-24-v/10*(h-40);
+ g.strokeStyle=cv('--line');for(let i=0;i<=10;i+=2){g.beginPath();g.moveTo(X(i),Y(0));g.lineTo(X(i),Y(10));g.moveTo(X(0),Y(i));g.lineTo(X(10),Y(i));g.stroke()}
+ const ds=kp.map(p=>({p,d:Math.hypot(p[0]-kq[0],p[1]-kq[1])})).sort((a,b)=>a.d-b.d),nb=ds.slice(0,k);
+ nb.forEach(o=>{g.strokeStyle=cv('--amber');g.setLineDash([4,3]);g.beginPath();g.moveTo(X(kq[0]),Y(kq[1]));g.lineTo(X(o.p[0]),Y(o.p[1]));g.stroke();g.setLineDash([])});
+ kp.forEach(p=>{g.fillStyle=p[2]?cv('--violet'):cv('--red');g.beginPath();if(p[2])g.rect(X(p[0])-6,Y(p[1])-6,12,12);else g.arc(X(p[0]),Y(p[1]),7,0,6.3);g.fill()});
+ const f=nb.filter(o=>o.p[2]==0).length,pa=k-f;const res=f>pa?'Fail':pa>f?'Pass':'tie';
+ g.fillStyle=cv('--green');g.beginPath();g.arc(X(kq[0]),Y(kq[1]),9,0,6.3);g.fill();g.fillStyle=cv('--text');g.font='11px monospace';g.fillText('hrs studied →',w-100,h-6);g.fillText('sleep ↑',2,12);
+ $('#ko').textContent=`Query (${f4(kq[0])}, ${f4(kq[1])})   ● Fail  ■ Pass\n`+nb.map((o,i)=>`${i+1}. (${o.p[0]},${o.p[1]}) ${o.p[2]?'Pass':'Fail'}  d=${f4(o.d)}`).join('\n')+`\nVote: Fail=${f}, Pass=${pa}  ⇒  ${res}`}
+const kcv=$('#kc');const kclick=e=>{const r=kcv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;kq=[Math.max(0,Math.min(10,(t.clientX-r.left-30)/(r.width-50)*10)),Math.max(0,Math.min(10,(r.height-24-(t.clientY-r.top))/(r.height-40)*10))];knn()};
+kcv.addEventListener('pointerdown',kclick);$('#kk').addEventListener('input',knn);
+
+/* ---------- 3-D PCA ---------- */
+let rs=7;const rnd=()=>(rs=(rs*16807)%2147483647)/2147483647,gauss=()=>Math.sqrt(-2*Math.log(rnd()+1e-9))*Math.cos(6.2832*rnd());
+const pts=Array.from({length:220},()=>{const a=gauss()*3,b=gauss()*1.4,c=gauss()*.5;return[a*.8+b*-.3+c*.1,a*.5+b*.8+c*-.2,a*.3+b*.3+c*.9]});
+const mu=[0,1,2].map(i=>pts.reduce((s,p)=>s+p[i],0)/pts.length);pts.forEach(p=>{for(let i=0;i<3;i++)p[i]-=mu[i]});
+const C3=[0,1,2].map(i=>[0,1,2].map(j=>pts.reduce((s,p)=>s+p[i]*p[j],0)/(pts.length-1)));
+function powe(M){let v=[1,.7,.3];for(let k=0;k<200;k++){let u=M.map(r=>r[0]*v[0]+r[1]*v[1]+r[2]*v[2]);const m=Math.hypot(...u);v=u.map(z=>z/m)}const Mv=M.map(r=>r[0]*v[0]+r[1]*v[1]+r[2]*v[2]);return{l:v[0]*Mv[0]+v[1]*Mv[1]+v[2]*Mv[2],v}}
+const e1=powe(C3);const M2=C3.map((r,i)=>r.map((x,j)=>x-e1.l*e1.v[i]*e1.v[j]));const e2=powe(M2);const M3=M2.map((r,i)=>r.map((x,j)=>x-e2.l*e2.v[i]*e2.v[j]));const e3=powe(M3);
+const E=[e1,e2,e3],tot=E.reduce((s,e)=>s+e.l,0);
+let ry=.6,rx=.4,drag=null,auto=true;const pc=$('#pc');
+pc.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];auto=false;pc.setPointerCapture(e.pointerId)});pc.addEventListener('pointerup',()=>drag=null);
+pc.addEventListener('pointermove',e=>{if(!drag)return;ry+=(e.clientX-drag[0])*.01;rx+=(e.clientY-drag[1])*.01;drag=[e.clientX,e.clientY]});
+function pcLoop(){if($('#d3').classList.contains('show')){const{x:g,w,h}=fit(pc,460);if(auto)ry+=.006;const f=+$('#pf').value;$('#pv').textContent=Math.round(f*100)+'%';
+ const proj=p=>{const d=p[0]*E[2].v[0]+p[1]*E[2].v[1]+p[2]*E[2].v[2];return p.map((v,i)=>v-f*d*E[2].v[i])};
+ const tr=p=>{let[x,y,z]=p;let a=x*Math.cos(ry)+z*Math.sin(ry),b=y,c=-x*Math.sin(ry)+z*Math.cos(ry);let y2=b*Math.cos(rx)-c*Math.sin(rx),z2=b*Math.sin(rx)+c*Math.cos(rx);const s=1/(1-z2/22);return[w/2+a*s*34,h/2+y2*s*34,z2,s]};
+ const cols=[cv('--amber'),cv('--violet'),cv('--green')];
+ [[1.7,0],[1.7,1],[1.7,2]].forEach(([k,i])=>{const L=Math.sqrt(E[i].l)*2.4;const a=tr(E[i].v.map(v=>-v*L)),b=tr(E[i].v.map(v=>v*L));g.strokeStyle=cols[i];g.lineWidth=2.5;g.beginPath();g.moveTo(a[0],a[1]);g.lineTo(b[0],b[1]);g.stroke();g.fillStyle=cols[i];g.font='bold 12px monospace';g.fillText('PC'+(i+1),b[0]+6,b[1])});
+ const P=pts.map(p=>tr(proj(p))).sort((a,b)=>a[2]-b[2]);P.forEach(q=>{g.fillStyle=cv('--cyan');g.globalAlpha=.45+.5*(q[2]+8)/16;g.beginPath();g.arc(q[0],q[1],2.6*q[3],0,6.3);g.fill()});g.globalAlpha=1}
+ requestAnimationFrame(pcLoop)}
+$('#po').textContent=`Eigenvalues of covariance: ${E.map(e=>f4(e.l)).join(', ')}\nExplained variance: ${E.map((e,i)=>`PC${i+1}=${(e.l/tot*100).toFixed(1)}%`).join('  ')}\nPC1+PC2 keep ${((E[0].l+E[1].l)/tot*100).toFixed(1)}% → 3-D data compresses to 2-D with little loss.`;pcLoop();
+
+/* ---------- knowledge graph ---------- */
+const N=[['ds','Data Science',4],['ml','Machine Learning',4],['knn','k-NN',4],['bigdata','Big Data 5Vs',4],['eigen','Eigen / Spectral',2],['svd','SVD',2],['pca','PCA',2],['bayes','Bayes',3],['mle','MLE',3],['corr','Correlation',3],['reg','Regression',3],['stats','Descriptive Stats',3]];
+const Ed=[['ds','ml'],['ds','bigdata'],['ds','stats'],['ml','knn'],['ml','reg'],['ml','pca'],['eigen','pca'],['eigen','svd'],['svd','pca'],['pca','corr'],['corr','reg'],['reg','mle'],['mle','bayes'],['bayes','ml'],['stats','corr'],['stats','mle'],['knn','reg']];
+const G=N.map((n,i)=>({id:n[0],t:n[1],m:n[2],x:Math.cos(i/N.length*6.28)*160,y:Math.sin(i/N.length*6.28)*160,vx:0,vy:0}));const gi=Object.fromEntries(G.map(n=>[n.id,n]));
+let hov=null;const gc=$('#gc');
+function gStep(){G.forEach(a=>{G.forEach(b=>{if(a===b)return;let dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy)||1;const f=5200/(d*d);a.vx+=dx/d*f;a.vy+=dy/d*f})});
+ Ed.forEach(([p,q])=>{const a=gi[p],b=gi[q];const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,f=(d-120)*.02;a.vx+=dx/d*f;a.vy+=dy/d*f;b.vx-=dx/d*f;b.vy-=dy/d*f});
+ G.forEach(n=>{n.vx-=n.x*.012;n.vy-=n.y*.012;n.x+=n.vx*.5;n.y+=n.vy*.5;n.vx*=.8;n.vy*=.8})}
+function gDraw(){const{x:g,w,h}=fit(gc,520);g.save();g.translate(w/2,h/2);const mc={2:cv('--cyan'),3:cv('--amber'),4:cv('--violet')};
+ Ed.forEach(([p,q])=>{const a=gi[p],b=gi[q],on=hov&&(hov===p||hov===q);g.strokeStyle=on?cv('--text'):cv('--line');g.lineWidth=on?2.2:1;g.beginPath();g.moveTo(a.x,a.y);g.lineTo(b.x,b.y);g.stroke()});
+ G.forEach(n=>{const near=!hov||hov===n.id||Ed.some(e=>(e[0]===hov&&e[1]===n.id)||(e[1]===hov&&e[0]===n.id));g.globalAlpha=near?1:.25;g.fillStyle=mc[n.m];const r=hov===n.id?20:15+Math.sin(performance.now()/500+n.x)*1.5;g.beginPath();g.arc(n.x,n.y,r,0,6.3);g.fill();g.fillStyle=cv('--text');g.font='600 12px system-ui';g.textAlign='center';g.fillText(n.t,n.x,n.y+r+14)});g.restore()}
+function gLoop(){if($('#kg').classList.contains('show')){gStep();gDraw()}requestAnimationFrame(gLoop)}gLoop();
+const gpos=e=>{const r=gc.getBoundingClientRect();return[e.clientX-r.left-r.width/2,e.clientY-r.top-r.height/2]};
+gc.addEventListener('pointermove',e=>{const[x,y]=gpos(e);const n=G.find(n=>Math.hypot(n.x-x,n.y-y)<22);hov=n?n.id:null;gc.style.cursor=n?'pointer':'default'});
+gc.addEventListener('pointerdown',e=>{const[x,y]=gpos(e);const n=G.find(n=>Math.hypot(n.x-x,n.y-y)<22);if(n){tagF=n.id;filt='all';$$('#chips .btn').forEach((x,i)=>x.classList.toggle('on',i===0));render();go('ans')}});
+
+/* ---------- quiz ---------- */
+const QZ=[
+['r for X=[1,2,3,4,5], Y=[2,4,6,8,10] is…',['0.5','+1','−1','0'],1,'Y = 2X is an exact increasing line.'],
+['Regression line for X=[1,2,3], Y=[2,3,5]:',['Ŷ=0.33+1.5X','Ŷ=1+X','Ŷ=1.5+0.33X','Ŷ=2+X'],0,'b=9/6=1.5, a=10/3−3=0.333.'],
+['Units sold at ₹15 from Ŷ = 150 − 5X:',['60','65','75','90'],2,'150 − 75 = 75.'],
+['MLE of coin p for H,T,H,H,H,T,H,H:',['0.5','0.6','0.75','0.8'],2,'6 heads / 8 flips.'],
+['MLE of λ for a Poisson sample is…',['median','sample mean','sample variance','max'],1,'d lnL/dλ = −n + Σx/λ = 0.'],
+['Geometric MLE for [3,1,2,2,4]:',['5/12','12/5','1/2','1/4'],0,'p̂ = n/Σx = 5/12 = 0.417.'],
+['Rare disease 1/1000, test 99 % sensitive, 2 % false +. P(disease | +) ≈',['99 %','50 %','4.7 %','0.1 %'],2,'0.00099/0.02097 = 0.047 (base-rate effect).'],
+['P(P3 | misprint) in the printer problem:',['0.25','0.4545','0.30','0.60'],1,'0.010 / 0.022.'],
+['Eigenvalues of [[4,1],[1,3]] sum to…',['7','12','5','1'],0,'Sum of eigenvalues = trace = 7.'],
+['Singular values of A satisfy σ₁σ₂σ₃ =',['trace A','|det A|','rank A','0'],1,'Product = 4.483·3.171·1.688 = 24 = |det A|.'],
+['MSE for Y=[10,12,14], Ŷ=[11,11,13]:',['0','1','3','1.5'],1,'(1+1+1)/3 = 1.'],
+['Mean 60, median 55, mode 50 indicates…',['negative skew','symmetric','positive skew','no skew'],2,'mean > median > mode.'],
+['A very large k in k-NN on a small dataset leads to…',['over-fitting','predicting majority class','zero error','faster learning'],1,'Under-fitting: the vote covers nearly all points.'],
+['Which of the 5 Vs is about trustworthiness of data?',['Volume','Velocity','Veracity','Variety'],2,'Veracity = data quality.']];
+let qi=0,qs=0;
+function qShow(){const b=$('#qbox');if(qi>=QZ.length){b.innerHTML=`<h3>Finished! ${qs}/${QZ.length}</h3><p>${qs>=QZ.length-2?'Outstanding.':qs>=9?'Great work – revisit the missed numericals.':'Review the Answers tab and retry.'}</p><button class="btn on" onclick="qi=0;qs=0;qShow()">Retry</button>`;return}
+ const q=QZ[qi];$('#qscore').textContent=`Question ${qi+1} of ${QZ.length} · score ${qs}`;b.innerHTML=`<h3>${q[0]}</h3>`+q[1].map((o,i)=>`<button class="btn opt" data-i="${i}">${o}</button>`).join('')+'<div class="exp" id="qe"></div>';
+ b.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{if(b.dataset.done==qi)return;b.dataset.done=qi;const i=+o.dataset.i;if(i===q[2]){qs++;o.classList.add('ok')}else{o.classList.add('bad');b.querySelectorAll('.opt')[q[2]].classList.add('ok')}$('#qe').innerHTML=q[3]+'<div class="row"><button class="btn on" id="qn">Next →</button></div>';$('#qn').onclick=()=>{qi++;qShow()}})}
+qShow();
+
+function redrawAll(){requestAnimationFrame(()=>{if($('#labs').classList.contains('show')){regDraw();bayes();mle();eig();stats();knn()}})}
+regDraw();bayes();mle();eig();stats();knn();
+</script>
+</body>
+</html>
