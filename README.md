@@ -40,7 +40,7 @@ Students revising for the GNEST305 exam need many practice questions with model 
 
 - **7-mark numericals:** 36, each with a marking breakdown.
 - **Labs:** 1 Regression, 2 Bayes theorem, 3 Coin MLE, 4 Eigen transform, 5 Descriptive statistics, 6 k-NN 2-D classifier, 7 PCA explained variance, 8 Custom k-NN playground.
-- **Source of the questions:** the repository does not record whether the questions are original or adapted from KTU papers or textbooks. Treat them as study material, and check answers against your textbook.
+- **Source of the questions:** prepared by the author for KTU GNEST305. Treat them as study material, and check answers against your textbook.
 - **Privacy:** no accounts, no analytics, no student data. The only external request is for Google Fonts.
 
 ## Results
@@ -102,7 +102,6 @@ Exam revision for GNEST305, and a template for a static, phone-friendly question
 
 - Covers Modules 2, 3 and 4 only.
 - Answers have not been independently checked against the KTU valuation scheme.
-- The source of the questions is not recorded in the repository.
 - The draft pages are earlier versions of the same content and are not linked from the portal.
 - Google Fonts are loaded from the network; offline, the page falls back to system fonts.
 - No automated tests; the checks in the run log were run by hand.
@@ -110,12 +109,11 @@ Exam revision for GNEST305, and a template for a static, phone-friendly question
 ## Future scope
 
 - Questions for Modules 1 and 5.
-- Source credits for each question.
 - Removing or consolidating the draft pages.
 
 ## Credits & citation
 
-Prepared by Jane Rose Ferdinant for KTU GNEST305. Fonts: Plus Jakarta Sans via Google Fonts (SIL Open Font License 1.1); see THIRD_PARTY_NOTICES.md. The repository does not record the sources of the questions or whether AI tools were used to produce them; the owner should add that credit.
+Prepared by Jane Rose Ferdinant for KTU GNEST305. Fonts: Plus Jakarta Sans via Google Fonts (SIL Open Font License 1.1); see THIRD_PARTY_NOTICES.md.
 
 ## License
 
